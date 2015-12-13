@@ -1,5 +1,6 @@
 package com.pcs.sms;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -15,7 +16,11 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-//import com.pcs.sms.
+
+import org.mcnlab.lib.smscommunicate.CommandHandler;
+import org.mcnlab.lib.smscommunicate.Recorder;
+import org.mcnlab.lib.smscommunicate.SmsReceiver;
+import org.mcnlab.lib.smscommunicate.UserDefined;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -49,6 +54,15 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         setupViewComponent();
+
+        //Define user variable
+        UserDefined.filter = "$FINDME$";
+
+        //Initialize database and command handler
+        Recorder.init(this, "MainActivity");
+        CommandHandler.init(this);
+
+        CommandHandler.getSharedCommandHandler().addExecutor("WHERE", new ExecutorWhere());
     }
 
     @Override
@@ -121,6 +135,12 @@ public class MainActivity extends AppCompatActivity
             String strPhoneNumber = edtPhoneNumber.getText().toString();
             if(strPhoneNumber.length()==10){
                 txtResult.setText(strPhoneNumber);
+                Recorder rec = Recorder.getSharedRecorder();
+                CommandHandler hdlr = CommandHandler.getSharedCommandHandler();
+                SQLiteDatabase db = rec.getWritableDatabase();
+                int device_id = rec.getDeviceIdByPhonenumberOrCreate(db, strPhoneNumber);
+                db.close();
+                hdlr.execute("WHERE", device_id, 0, null);
             }
             else{
                 txtResult.setText("wrong number");
