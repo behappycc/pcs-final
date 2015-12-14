@@ -13,8 +13,18 @@
         android:id="@+id/pcsFinal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/pcs_final"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"/>
+
+    <TextView
+        android:id="@+id/smsAlert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/smsAlert"
+        android:layout_below="@+id/pcsFinal"/>
 
     <ImageView
         android:id="@+id/imageUser"
@@ -22,7 +32,7 @@
         android:layout_height="100dip"
         android:layout_gravity="center"
         android:src="@drawable/user"
-        android:layout_below="@+id/pcsFinal"/>
+        android:layout_below="@+id/smsAlert"/>
 
     <TextView android:id="@+id/txtPhoneNumber"
         android:text="@string/phone_number"

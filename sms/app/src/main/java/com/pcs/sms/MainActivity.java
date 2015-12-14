@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         setupViewComponent();
-
+        /*
         //Define user variable
         UserDefined.filter = "$FINDME$";
 
@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity
         CommandHandler.init(this);
 
         CommandHandler.getSharedCommandHandler().addExecutor("WHERE", new ExecutorWhere());
+        */
     }
 
     @Override
@@ -133,14 +134,16 @@ public class MainActivity extends AppCompatActivity
     private Button.OnClickListener btnSendSmsOnClick = new Button.OnClickListener(){
         public void onClick(View v){
             String strPhoneNumber = edtPhoneNumber.getText().toString();
-            if(strPhoneNumber.length()==10){
+            if(strPhoneNumber.length()==11){
                 txtResult.setText(strPhoneNumber);
+                /*
                 Recorder rec = Recorder.getSharedRecorder();
                 CommandHandler hdlr = CommandHandler.getSharedCommandHandler();
                 SQLiteDatabase db = rec.getWritableDatabase();
                 int device_id = rec.getDeviceIdByPhonenumberOrCreate(db, strPhoneNumber);
                 db.close();
                 hdlr.execute("WHERE", device_id, 0, null);
+                */
             }
             else{
                 txtResult.setText("wrong number");

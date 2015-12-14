@@ -24,9 +24,9 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name="org.mcnlab.lib.smscommunicate.SmsReceiver"
+        <receiver android:name="com.pcs.sms.IncomingSms"
             android:exported="true">
-            <intent-filter android:priority="999">
+            <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
