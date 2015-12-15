@@ -21,7 +21,7 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private EditText edtPhoneNumber;
-    private Button btnSendSms, btnTestSms;
+    private Button btnSendSms, btnTestSms, btnTestMyBroadcast;
     private TextView txtResult, txtAddress;
 
     @Override
@@ -123,17 +123,27 @@ public class MainActivity extends AppCompatActivity
         edtPhoneNumber = (EditText) findViewById(R.id.edtPhoneNumber);
         btnSendSms = (Button) findViewById(R.id.btnSendSms);
         btnTestSms = (Button) findViewById(R.id.btnTestSms);
+        btnTestMyBroadcast = (Button) findViewById(R.id.btnTestMyBroadcast);
         txtResult = (TextView) findViewById(R.id.txtResult);
         txtAddress = (TextView) findViewById(R.id.smsAddress);
 
         btnSendSms.setOnClickListener(btnSendSmsOnClick);
         btnTestSms.setOnClickListener(btnTestSmsOnClick);
+        btnTestMyBroadcast.setOnClickListener(btnTestMyBroadcastOnClick);
     }
 
     private Button.OnClickListener btnTestSmsOnClick = new Button.OnClickListener(){
         public void onClick(View v){
             Intent it = new Intent("android.provider.Telephony.SMS_RECEIVED");
-            it.putExtra("sender_name", "hello");
+            it.putExtra("sender_name", "hellosms");
+            sendBroadcast(it);
+        }
+    };
+
+    private Button.OnClickListener btnTestMyBroadcastOnClick = new Button.OnClickListener(){
+        public void onClick(View v){
+            Intent it = new Intent("my_broadcast");
+            it.putExtra("sender_name", "hellomybroadcast");
             sendBroadcast(it);
         }
     };
@@ -143,14 +153,6 @@ public class MainActivity extends AppCompatActivity
             String strPhoneNumber = edtPhoneNumber.getText().toString();
             if(strPhoneNumber.length()==11){
                 txtResult.setText(strPhoneNumber);
-                /*
-                Recorder rec = Recorder.getSharedRecorder();
-                CommandHandler hdlr = CommandHandler.getSharedCommandHandler();
-                SQLiteDatabase db = rec.getWritableDatabase();
-                int device_id = rec.getDeviceIdByPhonenumberOrCreate(db, strPhoneNumber);
-                db.close();
-                hdlr.execute("WHERE", device_id, 0, null);
-                */
             }
             else{
                 txtResult.setText("wrong number");

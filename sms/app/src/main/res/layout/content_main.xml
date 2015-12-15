@@ -32,6 +32,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/smsAlert"/>
 
+    <Button android:id="@+id/btnTestMyBroadcast"
+        android:text="hi"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnTestSms"/>
+
     <TextView
         android:id="@+id/smsAddress"
         android:layout_width="wrap_content"
@@ -39,7 +45,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:text=""
-        android:layout_below="@+id/btnTestSms"/>
+        android:layout_below="@+id/btnTestMyBroadcast"/>
 
     <ImageView
         android:id="@+id/imageUser"

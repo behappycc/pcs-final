@@ -67,9 +67,23 @@ public class IncomingSms extends BroadcastReceiver {
     public IncomingSms() {
 
     }
-
+    /*
     public void onReceive(Context context, Intent intent){
         String sender = intent.getStringExtra("sender_name");
         Toast.makeText(context, "sms " + sender, Toast.LENGTH_LONG).show();
+    }
+    */
+
+    public void onReceive(Context context, Intent intent) {
+        switch(intent.getAction()){
+            case "android.provider.Telephony.SMS_RECEIVED":
+                String sender = intent.getStringExtra("sender_name");
+                Toast.makeText(context, "sms " + sender, Toast.LENGTH_LONG).show();
+                break;
+            case "my_broadcast":
+                String sender1 = intent.getStringExtra("sender_name");
+                Toast.makeText(context, "yo " + sender1, Toast.LENGTH_LONG).show();
+                break;
+        }
     }
 }
