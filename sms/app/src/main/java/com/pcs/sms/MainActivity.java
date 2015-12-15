@@ -1,5 +1,6 @@
 package com.pcs.sms;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -17,16 +18,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.mcnlab.lib.smscommunicate.CommandHandler;
-import org.mcnlab.lib.smscommunicate.Recorder;
-import org.mcnlab.lib.smscommunicate.SmsReceiver;
-import org.mcnlab.lib.smscommunicate.UserDefined;
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private EditText edtPhoneNumber;
-    private Button btnSendSms;
-    private TextView txtResult;
+    private Button btnSendSms, btnTestSms;
+    private TextView txtResult, txtAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,10 +122,21 @@ public class MainActivity extends AppCompatActivity
     private void setupViewComponent(){
         edtPhoneNumber = (EditText) findViewById(R.id.edtPhoneNumber);
         btnSendSms = (Button) findViewById(R.id.btnSendSms);
+        btnTestSms = (Button) findViewById(R.id.btnTestSms);
         txtResult = (TextView) findViewById(R.id.txtResult);
+        txtAddress = (TextView) findViewById(R.id.smsAddress);
 
         btnSendSms.setOnClickListener(btnSendSmsOnClick);
+        btnTestSms.setOnClickListener(btnTestSmsOnClick);
     }
+
+    private Button.OnClickListener btnTestSmsOnClick = new Button.OnClickListener(){
+        public void onClick(View v){
+            Intent it = new Intent("android.provider.Telephony.SMS_RECEIVED");
+            it.putExtra("sender_name", "hello");
+            sendBroadcast(it);
+        }
+    };
 
     private Button.OnClickListener btnSendSmsOnClick = new Button.OnClickListener(){
         public void onClick(View v){

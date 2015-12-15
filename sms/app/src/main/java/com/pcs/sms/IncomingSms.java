@@ -1,9 +1,9 @@
 package com.pcs.sms;
 
-/**
- * Created by hubert on 2015/12/14.
- */
 
+//Created by hubert on 2015/12/14.
+
+/*
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -51,5 +51,25 @@ public class IncomingSms extends BroadcastReceiver {
             Log.e("SmsReceiver", "Exception smsReceiver" +e);
 
         }
+    }
+}
+*/
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.telephony.SmsMessage;
+import android.util.Log;
+import android.widget.Toast;
+
+public class IncomingSms extends BroadcastReceiver {
+    public IncomingSms() {
+
+    }
+
+    public void onReceive(Context context, Intent intent){
+        String sender = intent.getStringExtra("sender_name");
+        Toast.makeText(context, "sms " + sender, Toast.LENGTH_LONG).show();
     }
 }

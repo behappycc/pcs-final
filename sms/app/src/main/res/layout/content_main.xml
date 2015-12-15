@@ -26,13 +26,28 @@
         android:text="@string/smsAlert"
         android:layout_below="@+id/pcsFinal"/>
 
+    <Button android:id="@+id/btnTestSms"
+        android:text="hi"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/smsAlert"/>
+
+    <TextView
+        android:id="@+id/smsAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text=""
+        android:layout_below="@+id/btnTestSms"/>
+
     <ImageView
         android:id="@+id/imageUser"
         android:layout_width="100dip"
         android:layout_height="100dip"
         android:layout_gravity="center"
         android:src="@drawable/user"
-        android:layout_below="@+id/smsAlert"/>
+        android:layout_below="@+id/smsAddress"/>
 
     <TextView android:id="@+id/txtPhoneNumber"
         android:text="@string/phone_number"
