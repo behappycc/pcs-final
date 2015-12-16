@@ -1,16 +1,77 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/drawer_layout"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:fitsSystemWindows="true" tools:openDrawer="start">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
 
-    <include layout="@layout/app_bar_main" android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <TextView
+        android:id="@+id/pcsFinal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pcs_final"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"/>
 
-    <android.support.design.widget.NavigationView android:id="@+id/nav_view"
-        android:layout_width="wrap_content" android:layout_height="match_parent"
-        android:layout_gravity="start" android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_main" app:menu="@menu/activity_main_drawer" />
+    <TextView
+        android:id="@+id/smsAlert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/smsAlert"
+        android:layout_below="@+id/pcsFinal"/>
 
-</android.support.v4.widget.DrawerLayout>
+    <Button android:id="@+id/btnTestSms"
+        android:text="hi"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/smsAlert"/>
+
+    <Button android:id="@+id/btnTestMyBroadcast"
+        android:text="hi"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnTestSms"/>
+
+    <TextView
+        android:id="@+id/smsAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text=""
+        android:layout_below="@+id/btnTestMyBroadcast"/>
+
+    <ImageView
+        android:id="@+id/imageUser"
+        android:layout_width="100dip"
+        android:layout_height="100dip"
+        android:layout_gravity="center"
+        android:src="@drawable/user"
+        android:layout_below="@+id/smsAddress"/>
+
+    <TextView android:id="@+id/txtPhoneNumber"
+        android:text="@string/phone_number"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageUser"/>
+
+    <EditText android:id="@+id/edtPhoneNumber"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtPhoneNumber"/>
+
+    <Button android:id="@+id/btnSendSms"
+        android:text="@string/send_sms"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edtPhoneNumber"/>
+
+    <TextView android:id="@+id/txtResult"
+        android:text="@string/result"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnSendSms"/>
+
+</RelativeLayout>
