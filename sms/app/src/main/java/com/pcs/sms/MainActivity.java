@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 
 public class MainActivity extends ActionBarActivity {
-    private EditText edtPhoneNumber;
-    private Button btnSendSms, btnTestSms, btnTestMyBroadcast;
+    private EditText edtPhoneNumber, edtUsername, edtPassword;
+    private Button btnSendSms, btnTestSms, btnTestMyBroadcast, btnLoginServer;
     private TextView txtResult, txtAddress;
 
     @Override
@@ -50,27 +50,20 @@ public class MainActivity extends ActionBarActivity {
         edtPhoneNumber = (EditText) findViewById(R.id.edtPhoneNumber);
         btnSendSms = (Button) findViewById(R.id.btnSendSms);
         btnTestSms = (Button) findViewById(R.id.btnTestSms);
-        btnTestMyBroadcast = (Button) findViewById(R.id.btnTestMyBroadcast);
+        btnLoginServer = (Button) findViewById(R.id.btnLoginServer);
         txtResult = (TextView) findViewById(R.id.txtResult);
-        txtAddress = (TextView) findViewById(R.id.smsAddress);
 
+        edtUsername = (EditText) findViewById(R.id.edtUsername);
+        edtPassword = (EditText) findViewById(R.id.edtPassword);
         btnSendSms.setOnClickListener(btnSendSmsOnClick);
         btnTestSms.setOnClickListener(btnTestSmsOnClick);
-        btnTestMyBroadcast.setOnClickListener(btnTestMyBroadcastOnClick);
+        btnLoginServer.setOnClickListener(btnLoginServerOnClick);
     }
 
     private Button.OnClickListener btnTestSmsOnClick = new Button.OnClickListener(){
         public void onClick(View v){
             Intent it = new Intent("android.provider.Telephony.SMS_RECEIVED");
             it.putExtra("sender_name", "hellosms");
-            sendBroadcast(it);
-        }
-    };
-
-    private Button.OnClickListener btnTestMyBroadcastOnClick = new Button.OnClickListener(){
-        public void onClick(View v){
-            Intent it = new Intent("my_broadcast");
-            it.putExtra("sender_name", "hellomybroadcast");
             sendBroadcast(it);
         }
     };
@@ -87,4 +80,18 @@ public class MainActivity extends ActionBarActivity {
 
         }
     };
+
+    private Button.OnClickListener btnLoginServerOnClick = new Button.OnClickListener(){
+        public void onClick(View v){
+            String strUsername = edtUsername.getText().toString();
+            String strPassword = edtPassword.getText().toString();
+            if(strUsername.equals("pcs") && strPassword.equals("123")){
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, ServerActivity.class);
+                startActivity(intent);
+            }
+        }
+    };
+
+
 }

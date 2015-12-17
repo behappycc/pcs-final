@@ -13,35 +13,11 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"/>
 
-    <TextView
-        android:id="@+id/smsAlert"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/smsAlert"
-        android:layout_below="@+id/pcsFinal"/>
-
     <Button android:id="@+id/btnTestSms"
         android:text="hi"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/smsAlert"/>
-
-    <Button android:id="@+id/btnTestMyBroadcast"
-        android:text="hi"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btnTestSms"/>
-
-    <TextView
-        android:id="@+id/smsAddress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text=""
-        android:layout_below="@+id/btnTestMyBroadcast"/>
+        android:layout_below="@+id/pcsFinal"/>
 
     <ImageView
         android:id="@+id/imageUser"
@@ -49,7 +25,7 @@
         android:layout_height="100dip"
         android:layout_gravity="center"
         android:src="@drawable/user"
-        android:layout_below="@+id/smsAddress"/>
+        android:layout_below="@+id/btnTestSms"/>
 
     <TextView android:id="@+id/txtPhoneNumber"
         android:text="@string/phone_number"
@@ -73,5 +49,21 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btnSendSms"/>
+
+    <EditText android:id="@+id/edtUsername"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtResult"/>
+
+    <EditText android:id="@+id/edtPassword"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edtUsername"/>
+
+    <Button android:id="@+id/btnLoginServer"
+        android:text="@string/server"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edtPassword"/>
 
 </RelativeLayout>

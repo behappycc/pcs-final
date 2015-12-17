@@ -20,10 +20,6 @@ public class IncomingSms extends BroadcastReceiver {
                 String sender = intent.getStringExtra("sender_name");
                 Toast.makeText(context, "sms " + sender, Toast.LENGTH_LONG).show();
                 break;
-            case "my_broadcast":
-                String sender1 = intent.getStringExtra("sender_name");
-                Toast.makeText(context, "yo " + sender1, Toast.LENGTH_LONG).show();
-                break;
         }
     }
 }
