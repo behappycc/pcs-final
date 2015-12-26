@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.telephony.SmsManager;
+import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -72,9 +74,19 @@ public class MainActivity extends ActionBarActivity {
         public void onClick(View v){
             String strPhoneNumber = edtPhoneNumber.getText().toString();
             if(strPhoneNumber.length()==11){
-                txtResult.setText(strPhoneNumber);
-            }
-            else{
+                /*txtResult.setText(strPhoneNumber);*/
+                try {
+                    SmsManager smsManager = SmsManager.getDefault();
+                    smsManager.sendTextMessage(strPhoneNumber, null, "TestSendMessage", null, null);
+                    Toast.makeText(getApplicationContext(), "SMS sent.", Toast.LENGTH_LONG).show();
+                    txtResult.setText("sent successfully");
+                }
+
+                catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), "SMS faild, please try again.", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+            } else{
                 txtResult.setText("wrong number");
             }
 
