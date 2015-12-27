@@ -58,11 +58,16 @@ public class IncomingSms extends BroadcastReceiver {
                     String senderNum = phoneNumber;
                     String message = currentMessage.getDisplayMessageBody();
 
-                    Log.i("SmsReceiver", "senderNum: "+ senderNum + "; message: " + message);
+                    Log.i("SmsReceiver", "senderNum: " + senderNum + "; message: " + message);
 
                     int duration = Toast.LENGTH_LONG;
-                    Toast toast = Toast.makeText(context, "senderNum: "+ senderNum + ", message: " + message, duration);
+                    Toast toast = Toast.makeText(context, "senderNum: " + senderNum + ", message: " + message, duration);
                     toast.show();
+
+                    if(!message.equals("GotTheMessage")) {
+                        SmsManager smsManager = SmsManager.getDefault();
+                        smsManager.sendTextMessage(senderNum, null, "GotTheMessage", null, null);
+                    }
 
                 } // end for loop
             } // bundle is null
