@@ -8,7 +8,7 @@
     <!-- libraries-->
     <script src="http://code.jquery.com/jquery.min.js"></script>
     <script src ="http://d3js.org/d3.v3.min.js"></script>
-    <script type="text/javascript" src="static/js/login.js"></script>
+    <script type="text/javascript" src="static/js/user.js"></script>
 
     <!-- custom files-->
 
@@ -18,7 +18,6 @@
     <link href="static/css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 
 </head>
-
 <!-- object information -->
 <body>
     <h1 class="header center black-text">Info</h1>
@@ -32,15 +31,11 @@
         <tbody>    
             <tr>
                 <td>temperature</td>
-                <td>{{ escape(deviceInfo[temperature]) }}</td>
+                <td>{{ deviceInfo['temperature'] }}</td>
             </tr>
             <tr>
                 <td>humidity</td>
-                <td>{{ escape(deviceInfo) }}</td>
-            </tr>
-
-
-
+                <td>{{ deviceInfo['humidity'] }}</td>
         </tbody>
     </table>
 

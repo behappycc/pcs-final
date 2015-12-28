@@ -12,6 +12,7 @@ import tornado.httpserver
 import tornado.httputil as httputil
 import tornado.ioloop
 import tornado.web
+from tornado import gen
 from tornado.options import define, options
 from  tornado.escape import json_decode
 from  tornado.escape import json_encode
@@ -19,9 +20,15 @@ from  tornado.escape import json_encode
 import pymongo
 from pymongo import MongoClient
 
+#sudo service mongod start
+#sudo service mongod stop
 #localhost:8888/index
+
 DB_IP = "localhost"
 DB_PORT = 27017
+client = MongoClient(DB_IP, DB_PORT)
+db = client['pcs']
+collection = db['account']
 
 def main():
     parser = argparse.ArgumentParser(description='ptt-clustering server')
@@ -65,29 +72,69 @@ class IndexHandler(BaseHandler):
     def get(self):
         abc = ["Item 1", "Item 2", "Item 3"]
         self.render("index.html", abc = abc)
-'''
-<ul>
-       {% for ab in abc %}
-         <li>{{ escape(ab) }}</li>
-       {% end %}
-</ul>
-'''
 
 class LoginHandler(BaseHandler):
     def get(self):
         self.render("login.html")
 
+    @gen.coroutine
+    def post(self):
+        print 'yoooo'
+        deviceInfo = {}
+        deviceInfo['temperature'] = '15C'
+        deviceInfo['humidity'] = '80%'
+        #json_obj = json_decode(self.request.body)
+        username = self.get_argument('username')
+        password = self.get_argument('password')
+        print username, password
+        print 'Post data received'
+        '''
+        for key in list(json_obj.keys()):
+            print('key: %s , value: %s' % (key, json_obj[key]))
+        print json_obj['key1']
+        print json_obj['key2']
+        post = {
+            "username": json_obj['key1'],
+            "password": json_obj['key2']
+        }
+        '''
+        #collection.insert_one(post)
+        #print collection.find_one({"username" : "hub"})
+        #user = collection.find_one({"username" : "hub"})
+        #print x["username"] + 'yo'
+        loginUser = collection.find_one({"username": username})
+        if loginUser != None and loginUser["password"] == password:
+            print 'go user'
+            self.redirect("/user") 
+
+        else:
+            response_to_send = {}
+            response_to_send['newkey'] = 'Incorrect username or password.'
+            print('Response to return')
+            pprint.pprint(response_to_send)
+            self.write(json.dumps(response_to_send))
+
+        '''
+        # new dictionary
+        response_to_send = {}
+        response_to_send['newkey'] = json_obj['key1']
+        print('Response to return')
+        pprint.pprint(response_to_send)
+        self.write(json.dumps(response_to_send))
+        '''
 class AdminHandler(BaseHandler):
     def get(self):
-        self.render("admin.html")
+        deviceInfo = {}
+        deviceInfo['temperature'] = '15C'
+        deviceInfo['humidity'] = '80%'
+        self.render("admin.html", deviceInfo = deviceInfo)
 
 class UserHandler(BaseHandler):
     def get(self):
-        deviceInfo = { 
-            'temperature': '15C',
-            'humidity': '70%', 
-        }
-        self.render("user.html", deviceInfo = json_encode(deviceInfo))
+        deviceInfo = {}
+        deviceInfo['temperature'] = '15C'
+        deviceInfo['humidity'] = '80%'
+        self.render("user.html", deviceInfo = deviceInfo)
 
 class TestHandler(BaseHandler):
     def get(self):
@@ -112,11 +159,8 @@ class AjaxHandler(tornado.web.RequestHandler):
         # new dictionary
         response_to_send = {}
         response_to_send['newkey'] = json_obj['key1']
-
         print('Response to return')
-
         pprint.pprint(response_to_send)
-
         self.write(json.dumps(response_to_send))
 
 if __name__ == '__main__':

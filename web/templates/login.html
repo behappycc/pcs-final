@@ -24,12 +24,12 @@
     <div class="container">
         <div class="span12">
             <div id="sdcontainer">
-                <form class="well form-inline">
-                    <input id="input1" type="text" class="input" placeholder="Pick a username">
-                    <input id="input2" type="password" class="validate" placeholder="Password">
-                    <button id="createUser" class="btn btn-primary">Sign up for pcs</button>
+                <form class="well form-inline" action="/login" method="post">
+                    <input id="username" name="username"  type="text" class="input" placeholder="Pick a username">
+                    <input id="password" name="password" type="password" class="validate" placeholder="Password">
+                    <button id="buttonSignIn" class="btn btn-primary">Sign in</button>
                 </form>
-                <span id="responseCreateUser"></span>
+                <span id="responseLogin"></span>
             </div>
         </div>
     </div>

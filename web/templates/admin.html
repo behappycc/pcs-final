@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign in to pcs</title>
+    <title>admin</title>
 
     <!-- libraries-->
     <script src="http://code.jquery.com/jquery.min.js"></script>
@@ -21,16 +21,9 @@
 
 <body>
     <h1 class="header center black-text">Admin</h1>
-    <!-- Switch -->
-    <div class="switch">
-        <label>
-          Off
-          <input type="checkbox">
-          <span class="lever"></span>
-          On
-        </label>
-    </div>
+    <button id="buttonBack" class="btn btn-primary">Sign in</button>
 
+    <!-- user information -->
     <table class="bordered">
         <thead>
           <tr>
@@ -66,6 +59,25 @@
                 </div>
             </td>
           </tr>
+        </tbody>
+      </table>
+
+      <!-- object information -->
+      <table class="bordered">
+        <thead>
+            <tr>
+                <th data-field="device">Device</th>
+                <th data-field="condition">Condition</th>
+            </tr>
+        </thead>
+        <tbody>    
+            <tr>
+                <td>temperature</td>
+                <td>{{ deviceInfo['temperature'] }}</td>
+            </tr>
+            <tr>
+                <td>humidity</td>
+                <td>{{ deviceInfo['humidity'] }}</td>
         </tbody>
       </table>
 
