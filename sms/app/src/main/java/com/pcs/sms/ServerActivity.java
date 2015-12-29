@@ -14,6 +14,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import java.util.Objects;
 
 public class ServerActivity extends ActionBarActivity {
@@ -57,11 +63,11 @@ public class ServerActivity extends ActionBarActivity {
     private Button.OnClickListener btnServerConnectOnClick = new Button.OnClickListener(){
         public void onClick(View v){
             ConnectPiTask connectPiTask = new ConnectPiTask();
-            connectPiTask.execute();
+            connectPiTask.execute("apple");
         }
     };
 
-    private class ConnectPiTask extends AsyncTask<Object, Integer, Long>
+    /*private class ConnectPiTask extends AsyncTask<Object, Integer, Long>
     {
         public ConnectPiTask(){
 
@@ -79,6 +85,34 @@ public class ServerActivity extends ActionBarActivity {
 
         protected void onPostExecute(Long result) {
 
+        }
+    }*/
+
+    private class ConnectPiTask extends AsyncTask<String, Void, String>
+    {
+        @Override
+        protected String doInBackground(String... str) {
+            try
+            {
+                /*String get_url = "http://10.109.9.42:3001/receive?q=" + str[0].replace(" ", "%20");*/
+                String get_url = "http://cdict.net/?q=" + str[0].replace(" ", "%20");
+                HttpClient Client = new DefaultHttpClient();
+                HttpGet httpget;
+                ResponseHandler<String> responseHandler = new BasicResponseHandler();
+                httpget = new HttpGet(get_url);
+                String content = Client.execute(httpget, responseHandler);
+                return content;
+            }
+            catch(Exception e)
+            {
+                System.out.println(e);
+            }
+            return "Cannot Connect";
+        }
+
+        protected void onPostExecute(String result) {
+            TextView tv = (TextView) findViewById(R.id.txtServerState);
+            tv.setText(result);
         }
     }
 
