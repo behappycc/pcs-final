@@ -50,12 +50,12 @@
           <div class="container">
             <div class="span12">
               <div id="sdcontainer">
-                <form class="well form-inline">
-                  <input id="input1" type="text" class="input" placeholder="Pick a username">
-                  <input id="input2" type="password" class="validate" placeholder="Password">
+                <form class="well form-inline" action="/index" method="post">
+                  <input id="newusername" name="newusername"  type="text" class="input" placeholder="Pick a username">
+                  <input id="newpassword" name="newpassword" type="password" class="validate" placeholder="Password">
                   <button id="createUser" class="btn btn-primary">Sign up for pcs</button>
                 </form>
-                <span id="responseCreateUser"></span>
+                <span id="responseCreateUser">{{ createMessage }}</span>
               </div>
             </div>
           </div>

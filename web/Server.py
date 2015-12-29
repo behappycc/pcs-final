@@ -70,64 +70,69 @@ class BaseHandler(tornado.web.RequestHandler):
 
 class IndexHandler(BaseHandler):
     def get(self):
+        createMessage = ""
         abc = ["Item 1", "Item 2", "Item 3"]
-        self.render("index.html", abc = abc)
+        self.render("index.html", abc = abc, createMessage = createMessage)
+
+    def post(self):
+        newusername = self.get_argument("newusername")
+        newpassword = self.get_argument("newpassword")
+        print newusername, newpassword
+        newUser = collection.find_one({"username": newusername})
+        if newUser == None:
+            post = {
+            "username": newusername,
+            "password": newpassword
+            }
+            collection.insert_one(post)
+            createMessage = "new user"
+        else:
+            createMessage = "old user"
+        self.render("index.html", createMessage = createMessage)
+
 
 class LoginHandler(BaseHandler):
     def get(self):
-        self.render("login.html")
+        incorrectMessage = ""
+        self.render("login.html", incorrectMessage = incorrectMessage)
 
     @gen.coroutine
     def post(self):
-        print 'yoooo'
-        deviceInfo = {}
-        deviceInfo['temperature'] = '15C'
-        deviceInfo['humidity'] = '80%'
-        #json_obj = json_decode(self.request.body)
         username = self.get_argument('username')
         password = self.get_argument('password')
         print username, password
         print 'Post data received'
-        '''
-        for key in list(json_obj.keys()):
-            print('key: %s , value: %s' % (key, json_obj[key]))
-        print json_obj['key1']
-        print json_obj['key2']
-        post = {
-            "username": json_obj['key1'],
-            "password": json_obj['key2']
-        }
-        '''
-        #collection.insert_one(post)
-        #print collection.find_one({"username" : "hub"})
-        #user = collection.find_one({"username" : "hub"})
-        #print x["username"] + 'yo'
+
         loginUser = collection.find_one({"username": username})
         if loginUser != None and loginUser["password"] == password:
             print 'go user'
             self.redirect("/user") 
 
         else:
-            response_to_send = {}
-            response_to_send['newkey'] = 'Incorrect username or password.'
-            print('Response to return')
-            pprint.pprint(response_to_send)
-            self.write(json.dumps(response_to_send))
+            incorrectMessage = "Incorrect username or password."
+            self.render("login.html", incorrectMessage = incorrectMessage)
 
-        '''
-        # new dictionary
-        response_to_send = {}
-        response_to_send['newkey'] = json_obj['key1']
-        print('Response to return')
-        pprint.pprint(response_to_send)
-        self.write(json.dumps(response_to_send))
-        '''
 class AdminHandler(BaseHandler):
+    def __init__(self, application, request, **kwargs):
+        self.deviceInfo = {}
+        self.deviceInfo['temperature'] = '16C'
+        self.deviceInfo['humidity'] = '80%'
+        self.userInfo = []
+        super(AdminHandler, self).__init__(application, request, **kwargs)
+
     def get(self):
-        deviceInfo = {}
-        deviceInfo['temperature'] = '15C'
-        deviceInfo['humidity'] = '80%'
-        self.render("admin.html", deviceInfo = deviceInfo)
+        for post in collection.find():
+            self.userInfo.append(post)
+
+        self.render("admin.html", userInfo = self.userInfo, deviceInfo = self.deviceInfo)
+
+    def post(self):
+        for post in collection.find():
+            self.userInfo.append(post)
+        delusername = self.get_argument('delusername')
+        result = collection.delete_one({"username": delusername})
+        #collection.delete_many({})
+        self.render("admin.html", userInfo = self.userInfo, deviceInfo = self.deviceInfo)
 
 class UserHandler(BaseHandler):
     def get(self):

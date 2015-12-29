@@ -5,6 +5,7 @@ $(document).ready(function() {
         alert("hello fatty");
       });
 
+      /*
       $('#runajax').click(function (event) {
 
                 var valueForInput1 = $("#input1").val();
@@ -39,4 +40,5 @@ $(document).ready(function() {
 
                 event.preventDefault();
             });
+*/
 });

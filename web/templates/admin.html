@@ -21,7 +21,38 @@
 
 <body>
     <h1 class="header center black-text">Admin</h1>
-    <button id="buttonBack" class="btn btn-primary">Sign in</button>
+    <table class="bordered">
+        <thead>
+          <tr>
+              <th data-field="name">Name</th>    
+              <th data-field="access">Access</th>
+          </tr>
+        </thead>
+        {% for user in userInfo %}
+        <tbody>
+          <tr>
+            <td>{{user['username']}}</td>
+            <td>
+                <div class="switch">
+                    <label>
+                        Off
+                        <input type="checkbox">
+                        <span class="lever"></span>
+                         On
+                    </label>
+                </div>
+            </td>
+          </tr>
+        </tbody>
+        {% end %}
+      </table>
+
+      <!-- admin delete user -->
+      <form class="well form-inline" action="/admin" method="post">
+            <input id="delusername" name="delusername"  type="text" class="input" placeholder="Delete a user">
+            <button id="delUser" class="btn btn-primary">Delete a user</button>
+      </form>
+
 
     <!-- user information -->
     <table class="bordered">
