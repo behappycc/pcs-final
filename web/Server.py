@@ -50,6 +50,7 @@ class Application(tornado.web.Application):
         handlers = [
             (r"/index", IndexHandler),
             (r"/login", LoginHandler),
+            (r"/android", AndroidHandler),
             (r"/admin", AdminHandler),
             (r"/user", UserHandler),
             (r"/test", TestHandler),
@@ -59,14 +60,14 @@ class Application(tornado.web.Application):
         settings = dict(
             template_path=os.path.join(os.path.dirname(__file__), "templates"),
             static_path=os.path.join(os.path.dirname(__file__), "static"),
+            cookie_secret = "bZJc2sWbQLKos6GkHn/VB9oXwQt8S0R0kRvJ5/xJ89E=",
+            login_url = '/login',
         )
         super(Application, self).__init__(handlers, **settings)
 
 class BaseHandler(tornado.web.RequestHandler):
-    @property
-    def db(self):
-        pass
-        #return self.settings['db']
+    def get_current_user(self):
+        return self.get_secure_cookie("user")
 
 class IndexHandler(BaseHandler):
     def get(self):
@@ -104,13 +105,44 @@ class LoginHandler(BaseHandler):
         print 'Post data received'
 
         loginUser = collection.find_one({"username": username})
-        if loginUser != None and loginUser["password"] == password:
+        if username == 'admin' and password == 'admin':
+            self.set_current_admin('admin')
+            self.redirect("/admin")
+        elif loginUser != None and loginUser["password"] == password:
             print 'go user'
+            self.set_current_user(username)
             self.redirect("/user") 
 
         else:
             incorrectMessage = "Incorrect username or password."
             self.render("login.html", incorrectMessage = incorrectMessage)
+
+    def set_current_admin(self, admin):
+        if user:
+            self.set_secure_cookie('admin', tornado.escape.json_encode(admin))
+        else:
+            self.clear_cookie('admin')
+
+    def set_current_user(self, user):
+        if user:
+            self.set_secure_cookie('user', tornado.escape.json_encode(user))
+        else:
+            self.clear_cookie('user')
+
+class AndroidHandler(BaseHandler):
+    def __init__(self, application, request, **kwargs):
+        self.deviceInfo = {}
+        self.deviceInfo['temperature'] = '17C'
+        self.deviceInfo['humidity'] = '80%'
+        self.userInfo = []
+        super(AndroidHandler, self).__init__(application, request, **kwargs)
+
+    def get(self):
+        self.write(json.dumps(self.deviceInfo)) 
+        #self.write(self.deviceInfo)
+
+    def post(self):
+        self.write(json.dumps(self.deviceInfo)) 
 
 class AdminHandler(BaseHandler):
     def __init__(self, application, request, **kwargs):
@@ -120,6 +152,7 @@ class AdminHandler(BaseHandler):
         self.userInfo = []
         super(AdminHandler, self).__init__(application, request, **kwargs)
 
+    @tornado.web.authenticated
     def get(self):
         for post in collection.find():
             self.userInfo.append(post)
@@ -135,6 +168,7 @@ class AdminHandler(BaseHandler):
         self.render("admin.html", userInfo = self.userInfo, deviceInfo = self.deviceInfo)
 
 class UserHandler(BaseHandler):
+    @tornado.web.authenticated
     def get(self):
         deviceInfo = {}
         deviceInfo['temperature'] = '15C'
@@ -145,6 +179,10 @@ class TestHandler(BaseHandler):
     def get(self):
         abc = ["Item 1", "Item 2", "Item 3"]
         self.render("test.html",title="My title", abc = abc)
+
+class ErrorHandler(BaseHandler):  
+    def get(self):                               
+        self.render("error.html")
 
 class AjaxHandler(tornado.web.RequestHandler):
     def get(self):
