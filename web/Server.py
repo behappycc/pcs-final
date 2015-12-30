@@ -23,8 +23,10 @@ from pymongo import MongoClient
 #sudo service mongod start
 #sudo service mongod stop
 #localhost:8888/index
+#140.112.91.221
 
-DB_IP = "localhost"
+#DB_IP = "localhost"
+DB_IP = "140.112.91.221"
 DB_PORT = 27017
 client = MongoClient(DB_IP, DB_PORT)
 db = client['pcs']
