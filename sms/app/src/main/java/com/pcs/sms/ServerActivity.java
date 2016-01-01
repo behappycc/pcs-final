@@ -19,6 +19,9 @@ import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Objects;
 
@@ -96,12 +99,25 @@ public class ServerActivity extends ActionBarActivity {
             {
                 /*String get_url = "http://10.109.9.42:3001/receive?q=" + str[0].replace(" ", "%20");*/
                 String get_url = "http://cdict.net/?q=" + str[0].replace(" ", "%20");
+                /*String get_url = "http://140.112.91.221:8888/android";*/
                 HttpClient Client = new DefaultHttpClient();
                 HttpGet httpget;
                 ResponseHandler<String> responseHandler = new BasicResponseHandler();
                 httpget = new HttpGet(get_url);
                 String content = Client.execute(httpget, responseHandler);
-                return content;
+
+                String strJson="{\"temperature\": \"17C\", \"humidity\": \"80%\"}";
+                String data = "";
+                try {
+                    JSONObject jsonObject = new JSONObject(strJson);
+
+                    String temper = jsonObject.optString("temperature").toString();
+                    String humid = jsonObject.optString("humidity").toString();
+
+                    data = "Temperature=" + temper + "\nHumidity= " + humid;
+                } catch (JSONException e) {e.printStackTrace();}
+
+                return data;
             }
             catch(Exception e)
             {
