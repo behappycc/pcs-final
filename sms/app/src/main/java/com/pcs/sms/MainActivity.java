@@ -77,7 +77,7 @@ public class MainActivity extends ActionBarActivity {
                 /*txtResult.setText(strPhoneNumber);*/
                 try {
                     SmsManager smsManager = SmsManager.getDefault();
-                    smsManager.sendTextMessage(strPhoneNumber, null, "TestSendMessage", null, null);
+                    smsManager.sendTextMessage(strPhoneNumber, null, "GetValue", null, null);
                     Toast.makeText(getApplicationContext(), "SMS sent.", Toast.LENGTH_LONG).show();
                     txtResult.setText("sent successfully");
                 }

@@ -27,17 +27,28 @@ public class IncomingSms extends BroadcastReceiver {
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class IncomingSms extends BroadcastReceiver {
 
     // Get the object of SmsManager
     final SmsManager sms = SmsManager.getDefault();
+    String senderNum = "";
 
     public void onReceive(Context context, Intent intent) {
 
@@ -55,7 +66,7 @@ public class IncomingSms extends BroadcastReceiver {
                     SmsMessage currentMessage = SmsMessage.createFromPdu((byte[]) pdusObj[i]);
                     String phoneNumber = currentMessage.getDisplayOriginatingAddress();
 
-                    String senderNum = phoneNumber;
+                    senderNum = phoneNumber;
                     String message = currentMessage.getDisplayMessageBody();
 
                     Log.i("SmsReceiver", "senderNum: " + senderNum + "; message: " + message);
@@ -64,9 +75,9 @@ public class IncomingSms extends BroadcastReceiver {
                     Toast toast = Toast.makeText(context, "senderNum: " + senderNum + ", message: " + message, duration);
                     toast.show();
 
-                    if(!message.equals("GotTheMessage")) {
-                        SmsManager smsManager = SmsManager.getDefault();
-                        smsManager.sendTextMessage(senderNum, null, "GotTheMessage", null, null);
+                    if(message.equals("GetValue")) {
+                        ConnectPiTask connectPiTask = new ConnectPiTask();
+                        connectPiTask.execute("apple");
                     }
 
                 } // end for loop
@@ -75,6 +86,47 @@ public class IncomingSms extends BroadcastReceiver {
         } catch (Exception e) {
             Log.e("SmsReceiver", "Exception smsReceiver" +e);
 
+        }
+    }
+
+    private class ConnectPiTask extends AsyncTask<String, Void, String>
+    {
+        @Override
+        protected String doInBackground(String... str) {
+            try
+            {
+                /*String get_url = "http://cdict.net/?q=" + str[0].replace(" ", "%20");*/
+                String get_url = "http://140.112.91.221:8888/android";
+                HttpClient Client = new DefaultHttpClient();
+                HttpGet httpget;
+                ResponseHandler<String> responseHandler = new BasicResponseHandler();
+                httpget = new HttpGet(get_url);
+                String content = Client.execute(httpget, responseHandler);
+
+                /*String strJson="{\"temperature\": \"17C\", \"humidity\": \"80%\"}";*/
+                String strJson = content;
+                String data = "";
+                try {
+                    JSONObject jsonObject = new JSONObject(strJson);
+
+                    String temper = jsonObject.optString("temperature").toString();
+                    String humid = jsonObject.optString("humidity").toString();
+
+                    data = "Temperature=" + temper + "\nHumidity= " + humid;
+                } catch (JSONException e) {e.printStackTrace();}
+
+                return data;
+            }
+            catch(Exception e)
+            {
+                System.out.println(e);
+            }
+            return "Cannot Connect";
+        }
+
+        protected void onPostExecute(String result) {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(senderNum, null, result, null, null);
         }
     }
 
