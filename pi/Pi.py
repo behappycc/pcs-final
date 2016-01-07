@@ -6,7 +6,34 @@ import time
 
 def camera():
     camera = picamera.PiCamera()
-    camera.capture('/static/Piimages/image.jpg')
+    time.sleep(1)
+    camera.capture('./static/PiImages/image.jpg')
+    camera.close()
+    #camera.start_preview()
+    #camera.stop_preview()
+
+
+    '''
+    def pixelCompare(i1, i2, ratio):
+    img1 = cv2.imread(i1)
+    img2 = cv2.imread(i2)
+    imgray1 = cv2.cvtColor(img1,cv2.COLOR_BGR2GRAY)
+    imgray2 = cv2.cvtColor(img2,cv2.COLOR_BGR2GRAY)
+    #imgInfo[0] = 1280, imgInfo[1] = 720
+    imgInfo = img1.shape
+    diff = 0
+    for i in xrange(imgInfo[0]):
+        for j in xrange(imgInfo[1]):
+            if imgray1[i, j] != imgray2[i, j]:
+                diff += 1
+    compare = float(diff) / float((imgInfo[0] * imgInfo[1]))
+    #print str(compare * 100) + '%'
+    if compare > ratio:
+        #there are differnt
+        return True
+    else:
+        return False
+    '''
 
 def sensor():
     sensor = Adafruit_DHT.DHT11
@@ -17,18 +44,25 @@ def sensor():
     else:
         print 'Failed to get reading. Try again!'
 
-def light():
+def lightOn():
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(4, GPIO.OUT)
-
+    LEDon = GPIO.output(4, 0)
+    '''
     while True:
         LEDon = GPIO.output(4, 0)
         time.sleep(1)
         LEDoff = GPIO.output(4, 1)
         time.sleep(1)
+    '''
+
+def lightOff():
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(4, GPIO.OUT)
+    LEDoff = GPIO.output(4, 1)
 
 def main():
-    light()
+    lightOn()
     camera()
 
 if __name__ == '__main__':
