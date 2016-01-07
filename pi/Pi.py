@@ -7,14 +7,10 @@ import cv2
 
 def camera():
     camera = picamera.PiCamera()
-    time.sleep(1)
     camera.capture('./static/PiImages/imageA.jpg')
     camera.close()
-
-    time.sleep(3)
-
-    camera = picamera.PiCamera()
     time.sleep(1)
+    camera = picamera.PiCamera()
     camera.capture('./static/PiImages/imageB.jpg')
     camera.close()
 
@@ -37,14 +33,17 @@ def camera():
     diff = 0
     for i in xrange(imgInfo[0]):
         for j in xrange(imgInfo[1]):
-            if imgray1[i, j] != imgray2[i, j]:
+            #if imgray1[i, j] != imgray2[i, j]:
+            if abs(imgray1[i, j] - imgray2[i, j]) > 5:
                 diff += 1
     compare = float(diff) / float((imgInfo[0] * imgInfo[1]))
     #print str(compare * 100) + '%'
     if compare > ratio:
         #there are differnt
+        #there are different
         return True
     else:
+        #there are same
         return False
     '''
 
