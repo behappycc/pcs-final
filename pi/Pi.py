@@ -3,17 +3,30 @@ import picamera
 import Adafruit_DHT
 import RPi.GPIO as GPIO
 import time
+import cv2
 
 def camera():
     camera = picamera.PiCamera()
     time.sleep(1)
-    camera.capture('./static/PiImages/image.jpg')
+    camera.capture('./static/PiImages/imageA.jpg')
     camera.close()
+
+    time.sleep(3)
+
+    camera = picamera.PiCamera()
+    time.sleep(1)
+    camera.capture('./static/PiImages/imageB.jpg')
+    camera.close()
+
+    imagelocationA = "./static/PiImages/imageA.jpg"    
+    imagelocationB = "./static/PiImages/imageB.jpg"
+
+    pixelCompare(imagelocationA,imagelocationB,0.1)
     #camera.start_preview()
     #camera.stop_preview()
 
 
-    '''
+    
     def pixelCompare(i1, i2, ratio):
     img1 = cv2.imread(i1)
     img2 = cv2.imread(i2)
