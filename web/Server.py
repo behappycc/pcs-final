@@ -16,6 +16,8 @@ from tornado import gen
 from tornado.options import define, options
 from  tornado.escape import json_decode
 from  tornado.escape import json_encode
+from tornado.httpclient import HTTPClient
+from tornado.httpclient import AsyncHTTPClient
 # mongodb module
 import pymongo
 from pymongo import MongoClient
@@ -24,9 +26,9 @@ from pymongo import MongoClient
 #sudo service mongod stop
 #localhost:8888/index
 #140.112.91.221
+#140.112.42.151
 
-#DB_IP = "localhost"
-DB_IP = "140.112.91.221"
+DB_IP = "localhost"
 DB_PORT = 27017
 client = MongoClient(DB_IP, DB_PORT)
 db = client['pcs']
@@ -34,13 +36,14 @@ collection = db['account']
 
 def main():
     parser = argparse.ArgumentParser(description='ptt-clustering server')
-    parser.add_argument('port', type=int, help='listening port for ptt-clustering server')
+    parser.add_argument('-p', type=int, help='listening port for ptt-clustering server')
     args = parser.parse_args()
+    port = args.p
     
     print("Server starting......")
 
     http_server = tornado.httpserver.HTTPServer(Application())
-    http_server.listen(args.port)
+    http_server.listen(port)
 
     try:
         tornado.ioloop.IOLoop.instance().start()
@@ -130,7 +133,7 @@ class LoginHandler(BaseHandler):
             self.set_secure_cookie('user', tornado.escape.json_encode(user))
         else:
             self.clear_cookie('user')
-
+'''
 class AndroidHandler(BaseHandler):
     def __init__(self, application, request, **kwargs):
         self.deviceInfo = {}
@@ -142,6 +145,20 @@ class AndroidHandler(BaseHandler):
     def get(self):
         self.write(json.dumps(self.deviceInfo)) 
         #self.write(self.deviceInfo)
+
+    def post(self):
+        self.write(json.dumps(self.deviceInfo)) 
+'''
+
+class AndroidHandler(BaseHandler):
+    def __init__(self, application, request, **kwargs):   
+        super(AndroidHandler, self).__init__(application, request, **kwargs)
+
+    def get(self):
+        http_client = HTTPClient()
+        response = http_client.fetch("http://140.112.42.151:8001/pi")
+        print response.body
+        self.write(response.body)
 
     def post(self):
         self.write(json.dumps(self.deviceInfo)) 
@@ -180,6 +197,19 @@ class UserHandler(BaseHandler):
 class TestHandler(BaseHandler):
     def get(self):
         abc = ["Item 1", "Item 2", "Item 3"]
+        http_client = HTTPClient()
+        response = http_client.fetch("http://140.112.42.151:8001/")
+        print response.body
+        '''
+        data = json.loads(response.body)
+        print data['temperature']
+        '''
+        self.write(response.body)
+        '''
+        http_client = AsyncHTTPClient()                                             
+        data = http_client.fetch("http://140.112.42.151:8001/", handle_request)
+        print "after callback"
+        '''
         self.render("test.html",title="My title", abc = abc)
 
 class ErrorHandler(BaseHandler):  
@@ -207,6 +237,19 @@ class AjaxHandler(tornado.web.RequestHandler):
         print('Response to return')
         pprint.pprint(response_to_send)
         self.write(json.dumps(response_to_send))
+
+
+def handle_request(response):
+    '''callback needed when a response arrive'''
+    print "start callback"
+    if response.error:
+        print "Error:", response.error
+    else:
+        print 'called'
+        print response.body
+        self.write(response.body)
+    
+  
 
 if __name__ == '__main__':
     main()
