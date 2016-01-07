@@ -3,6 +3,7 @@ import argparse
 import os.path
 import json
 import pprint
+import sys
 # tornado module
 import tornado.httpserver
 import tornado.httputil as httputil
@@ -12,7 +13,7 @@ from tornado.options import define, options
 from  tornado.escape import json_decode
 from  tornado.escape import json_encode
 #custom files
-import Pi
+import Pi as pi
 
 #140.112.91.221
 #140.112.42.151
@@ -59,10 +60,12 @@ class PiHandler(BaseHandler):
         super(PiHandler, self).__init__(application, request, **kwargs)
 
     def get(self):
+        pi.light()
+        pi.camera()
     	self.write(json.dumps(self.deviceInfo)) 
 
    	def post(self):
-   		self.write(json.dumps(self.deviceInfo)) 
+   		self.write(json.dumps(self.deviceInfo))
 
 if __name__ == '__main__':
     main()

@@ -6,7 +6,7 @@ import time
 
 def camera():
     camera = picamera.PiCamera()
-    camera.capture('image.jpg')
+    camera.capture('/static/Piimages/image.jpg')
 
 def sensor():
     sensor = Adafruit_DHT.DHT11
@@ -29,6 +29,7 @@ def light():
 
 def main():
     light()
+    camera()
 
 if __name__ == '__main__':
     main()

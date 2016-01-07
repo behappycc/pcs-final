@@ -56,6 +56,7 @@ class Application(tornado.web.Application):
             (r"/index", IndexHandler),
             (r"/login", LoginHandler),
             (r"/android", AndroidHandler),
+            (r"/androidlogin", AndroidLoginHandler),
             (r"/admin", AdminHandler),
             (r"/user", UserHandler),
             (r"/test", TestHandler),
@@ -123,7 +124,7 @@ class LoginHandler(BaseHandler):
             self.render("login.html", incorrectMessage = incorrectMessage)
 
     def set_current_admin(self, admin):
-        if user:
+        if admin:
             self.set_secure_cookie('admin', tornado.escape.json_encode(admin))
         else:
             self.clear_cookie('admin')
@@ -133,6 +134,36 @@ class LoginHandler(BaseHandler):
             self.set_secure_cookie('user', tornado.escape.json_encode(user))
         else:
             self.clear_cookie('user')
+
+
+class AndroidLoginHandler(BaseHandler):
+    def __init__(self, application, request, **kwargs):
+        self.deviceInfo = {}
+        self.deviceInfo['temperature'] = '17C'
+        self.deviceInfo['humidity'] = '80%'
+        self.userInfo = []
+        super(AndroidLoginHandler, self).__init__(application, request, **kwargs)   
+
+    def get(self):
+        incorrectMessage = ""
+        self.render("android.html", incorrectMessage = incorrectMessage)
+
+    def post(self):
+        username = self.get_argument('username')
+        password = self.get_argument('password')
+        print username, password
+        print 'Post data received'
+
+        loginUser = collection.find_one({"username": username})
+        if username == 'admin' and password == 'admin':
+            print 'go admin'
+        elif loginUser != None and loginUser["password"] == password:
+            print 'go user'
+        else:
+            incorrectMessage = "Incorrect username or password."
+            print 'Incorrect'
+
+
 '''
 class AndroidHandler(BaseHandler):
     def __init__(self, application, request, **kwargs):
@@ -155,21 +186,26 @@ class AndroidHandler(BaseHandler):
         self.deviceInfo = {}
         self.deviceInfo['temperature'] = '16C'
         self.deviceInfo['humidity'] = '80%'
+        self.deviceInfo['light'] = 'on'
         super(AndroidHandler, self).__init__(application, request, **kwargs)
 
     def get(self):
         http_client = HTTPClient()
+        #response = http_client.fetch("http://140.112.42.151:8001/pi")
         response = http_client.fetch("http://140.112.42.151:8001/pi")
         print response.body
         self.write(response.body)
 
+
     def post(self):
+        #test android http post
         username = self.get_argument('username')
         password = self.get_argument('password')
         userInfo = {}
         userInfo['username'] = username
         userInfo['password'] = password
-        self.write(json.dumps(self.userInfo)) 
+        self.write(json.dumps(self.userInfo))
+        
 
 class AdminHandler(BaseHandler):
     def __init__(self, application, request, **kwargs):
@@ -206,7 +242,7 @@ class TestHandler(BaseHandler):
     def get(self):
         abc = ["Item 1", "Item 2", "Item 3"]
         http_client = HTTPClient()
-        response = http_client.fetch("http://140.112.42.151:8001/")
+        response = http_client.fetch("http://140.112.91.221:8001/")
         print response.body
         '''
         data = json.loads(response.body)
