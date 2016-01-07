@@ -152,6 +152,9 @@ class AndroidHandler(BaseHandler):
 
 class AndroidHandler(BaseHandler):
     def __init__(self, application, request, **kwargs):   
+        self.deviceInfo = {}
+        self.deviceInfo['temperature'] = '16C'
+        self.deviceInfo['humidity'] = '80%'
         super(AndroidHandler, self).__init__(application, request, **kwargs)
 
     def get(self):
@@ -161,7 +164,12 @@ class AndroidHandler(BaseHandler):
         self.write(response.body)
 
     def post(self):
-        self.write(json.dumps(self.deviceInfo)) 
+        username = self.get_argument('username')
+        password = self.get_argument('password')
+        userInfo = {}
+        userInfo['username'] = username
+        userInfo['password'] = password
+        self.write(json.dumps(self.userInfo)) 
 
 class AdminHandler(BaseHandler):
     def __init__(self, application, request, **kwargs):
