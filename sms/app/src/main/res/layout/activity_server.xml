@@ -20,10 +20,43 @@
         android:text="@string/serverState"
         android:layout_below="@+id/txtUser"/>
 
+    <TextView
+        android:id="@+id/txtUsername"
+        android:text="@string/username"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtServerState"/>
+
+    <EditText android:id="@+id/edtUsername"
+        android:text="@string/username"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtUsername"/>
+
+    <TextView
+        android:id="@+id/txtPassword"
+        android:text="@string/password"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edtUsername"/>
+
+    <EditText android:id="@+id/edtPassword"
+        android:text="@string/password"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:password="true"
+        android:layout_below="@+id/txtPassword"/>
+
     <Button android:id="@+id/btnServerConnect"
         android:text="@string/connect"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txtServerState"/>
+        android:layout_below="@+id/edtPassword"/>
+
+    <TextView android:id="@+id/txtResult"
+        android:text="@string/result"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnServerConnect"/>
 
 </RelativeLayout>
