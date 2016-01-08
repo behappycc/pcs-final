@@ -190,21 +190,25 @@ class AndroidHandler(BaseHandler):
         super(AndroidHandler, self).__init__(application, request, **kwargs)
 
     def get(self):
+        '''
         http_client = HTTPClient()
-        #response = http_client.fetch("http://140.112.42.151:8001/pi")
         response = http_client.fetch("http://140.112.42.151:8001/pi")
         print response.body
         self.write(response.body)
-
+        '''
+        self.write(json.dumps(self.deviceInfo))
 
     def post(self):
         #test android http post
         username = self.get_argument('username')
         password = self.get_argument('password')
+        print username, password
         userInfo = {}
         userInfo['username'] = username
         userInfo['password'] = password
-        self.write(json.dumps(self.userInfo))
+        userInfo['loginInfo'] = 'login successful'
+        #self.write(username)
+        self.write(json.dumps(userInfo))
         
 
 class AdminHandler(BaseHandler):

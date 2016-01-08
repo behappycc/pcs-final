@@ -11,4 +11,6 @@
     <string name="serverState">server state</string>
     <string name="connect">CONNECT</string>
     <string name="title_activity_server">ServerActivity</string>
+    <string name="username">username</string>
+    <string name="password">password</string>
 </resources>
