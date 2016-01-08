@@ -57,6 +57,7 @@ class Application(tornado.web.Application):
             (r"/login", LoginHandler),
             (r"/android", AndroidHandler),
             (r"/androidlogin", AndroidLoginHandler),
+            (r"/controlpi", ControlPiHandler),
             (r"/admin", AdminHandler),
             (r"/user", UserHandler),
             (r"/test", TestHandler),
@@ -141,45 +142,39 @@ class AndroidLoginHandler(BaseHandler):
         self.deviceInfo = {}
         self.deviceInfo['temperature'] = '17C'
         self.deviceInfo['humidity'] = '80%'
-        self.userInfo = []
         super(AndroidLoginHandler, self).__init__(application, request, **kwargs)   
 
     def get(self):
         incorrectMessage = ""
-        self.render("android.html", incorrectMessage = incorrectMessage)
+        self.render("androidlogin.html", incorrectMessage = incorrectMessage)
 
     def post(self):
         username = self.get_argument('username')
         password = self.get_argument('password')
         print username, password
-        print 'Post data received'
+        userInfo = {}
+        userInfo['username'] = username
+        userInfo['password'] = password
+        http_client = HTTPClient()
+        response = http_client.fetch("http://140.112.91.221:8001/")
+        print response.body
+        data = json.loads(response.body)
+        userInfo['temperature'] = data['temperature']
+        userInfo['humidity'] = data['humidity']
+        userInfo['imageUrl'] = 'http://140.112.91.221:8001/piimage'
 
         loginUser = collection.find_one({"username": username})
         if username == 'admin' and password == 'admin':
             print 'go admin'
+            userInfo['loginInfo'] = 'login successful'
         elif loginUser != None and loginUser["password"] == password:
             print 'go user'
+            userInfo['loginInfo'] = 'login successful'
         else:
-            incorrectMessage = "Incorrect username or password."
             print 'Incorrect'
+            userInfo['loginInfo'] = 'Incorrect username or password.'
 
-
-'''
-class AndroidHandler(BaseHandler):
-    def __init__(self, application, request, **kwargs):
-        self.deviceInfo = {}
-        self.deviceInfo['temperature'] = '17C'
-        self.deviceInfo['humidity'] = '80%'
-        self.userInfo = []
-        super(AndroidHandler, self).__init__(application, request, **kwargs)
-
-    def get(self):
-        self.write(json.dumps(self.deviceInfo)) 
-        #self.write(self.deviceInfo)
-
-    def post(self):
-        self.write(json.dumps(self.deviceInfo)) 
-'''
+        self.write(json.dumps(userInfo))
 
 class AndroidHandler(BaseHandler):
     def __init__(self, application, request, **kwargs):   
@@ -210,6 +205,16 @@ class AndroidHandler(BaseHandler):
         #self.write(username)
         self.write(json.dumps(userInfo))
         
+class ControlPiHandler(BaseHandler):
+    def get(self):
+        http_client = HTTPClient()
+        response = http_client.fetch("http://140.112.91.221:8001/")
+        print response.body
+        '''
+        data = json.loads(response.body)
+        print data['temperature']
+        '''
+        self.write(response.body)
 
 class AdminHandler(BaseHandler):
     def __init__(self, application, request, **kwargs):

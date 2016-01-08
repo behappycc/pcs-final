@@ -40,6 +40,7 @@ class Application(tornado.web.Application):
             (r"/", PiHandler),
             (r"/index", PiHandler),
             (r"/pi", PiHandler),
+            (r"/piimage", PiImageHandler),
         ]
 
         settings = dict(
@@ -66,6 +67,10 @@ class PiHandler(BaseHandler):
 
    	def post(self):
    		self.write(json.dumps(self.deviceInfo))
+
+class PiImageHandler(BaseHandler):
+    def get(self):
+        self.render("piimage.html")
 
 if __name__ == '__main__':
     main()
