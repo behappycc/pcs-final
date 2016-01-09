@@ -35,20 +35,36 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 
 public class IncomingSms extends BroadcastReceiver {
 
     // Get the object of SmsManager
     final SmsManager sms = SmsManager.getDefault();
-    String senderNum = "";
+    private String senderNum = "";
+    private String username = "";
+    private String password = "";
 
     public void onReceive(Context context, Intent intent) {
 
@@ -75,9 +91,15 @@ public class IncomingSms extends BroadcastReceiver {
                     Toast toast = Toast.makeText(context, "senderNum: " + senderNum + ", message: " + message, duration);
                     toast.show();
 
-                    if(message.equals("GetValue")) {
+                    message = "{"+ message + "}";
+                    Log.i("Transfer", "json: " + message);
+
+                    JSONObject jsonObject = new JSONObject(message);
+                    if(jsonObject.optString("role").equals("1")) {
+                        username = jsonObject.optString("username");
+                        password = jsonObject.optString("password");
                         ConnectPiTask connectPiTask = new ConnectPiTask();
-                        connectPiTask.execute("apple");
+                        connectPiTask.execute();
                     }
 
                 } // end for loop
@@ -89,39 +111,70 @@ public class IncomingSms extends BroadcastReceiver {
         }
     }
 
-    private class ConnectPiTask extends AsyncTask<String, Void, String>
+    private class ConnectPiTask extends AsyncTask<Object, Void, String>
     {
         @Override
-        protected String doInBackground(String... str) {
-            try
-            {
-                /*String get_url = "http://cdict.net/?q=" + str[0].replace(" ", "%20");*/
-                String get_url = "http://140.112.91.221:8888/android";
-                HttpClient Client = new DefaultHttpClient();
-                HttpGet httpget;
-                ResponseHandler<String> responseHandler = new BasicResponseHandler();
-                httpget = new HttpGet(get_url);
-                String content = Client.execute(httpget, responseHandler);
+        protected String doInBackground(Object... abc) {
 
-                /*String strJson="{\"temperature\": \"17C\", \"humidity\": \"80%\"}";*/
-                String strJson = content;
-                String data = "";
-                try {
-                    JSONObject jsonObject = new JSONObject(strJson);
+            HttpClient httpClient = new DefaultHttpClient();
+            // replace with your url
+            HttpPost httpPost = new HttpPost("http://140.112.42.151:8000/android");
 
-                    String temper = jsonObject.optString("temperature").toString();
-                    String humid = jsonObject.optString("humidity").toString();
-
-                    data = "Temperature=" + temper + "\nHumidity= " + humid;
-                } catch (JSONException e) {e.printStackTrace();}
-
-                return data;
+            //Post Data
+            List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(2);
+            nameValuePair.add(new BasicNameValuePair("username", username));
+            nameValuePair.add(new BasicNameValuePair("password", password));
+            Log.d("Http Post send:", username);
+            Log.d("Http Post send:", password);
+            //Encoding POST data
+            try {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePair));
+            } catch (UnsupportedEncodingException e) {
+                // log exception
+                e.printStackTrace();
             }
-            catch(Exception e)
-            {
-                System.out.println(e);
+
+            String data = "";
+            //making POST request.
+            try {
+                HttpResponse response = httpClient.execute(httpPost);
+                HttpEntity entity = response.getEntity();
+                //get hheader
+
+                String result = EntityUtils.toString(entity);
+                // write response to log
+                Log.d("Http Post Response:", result);
+
+                JSONObject jsonObject = new JSONObject(result);
+                String uname = jsonObject.optString("username").toString();
+                String pword = jsonObject.optString("password").toString();
+                String loginInfo = jsonObject.optString("loginInfo").toString();
+
+                if(loginInfo.equals("login successful")){
+                    /*data = "Temperature=" + temper + "\nHumidity= " + humid;*/
+                    data = "Username=" + uname + "\nPassword= " + pword;
+                }
+                else if(loginInfo.equals("login unsuccessful")){
+                    data = "The email and password you entered are not matched.";
+                }
+                else if(loginInfo == null ){
+                    data = "null";
+                }
+                else
+                    data = "error";
+
+            } catch (ClientProtocolException e) {
+                // Log exception
+                e.printStackTrace();
+                data = "ClientProtocolException";
+            } catch (IOException e) {
+                // Log exception
+                e.printStackTrace();
+                data = "IOException";
+            } catch (org.json.JSONException e){
+                data = "JSONException";
             }
-            return "Cannot Connect";
+            return data;
         }
 
         protected void onPostExecute(String result) {

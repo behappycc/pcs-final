@@ -12,9 +12,11 @@ import android.widget.TextView;
 import android.telephony.SmsManager;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 
 public class MainActivity extends ActionBarActivity {
-    private EditText edtPhoneNumber, edtUsername, edtPassword;
+    private EditText inputPhoneNumber, inputUsername, inputPassword;
     private Button btnSendSms, btnTestSms, btnTestMyBroadcast, btnLoginServer;
     private TextView txtResult, txtAddress;
 
@@ -49,42 +51,56 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void setupViewComponent(){
-        edtPhoneNumber = (EditText) findViewById(R.id.edtPhoneNumber);
+        inputPhoneNumber = (EditText) findViewById(R.id.inputPhoneNumber);
         btnSendSms = (Button) findViewById(R.id.btnSendSms);
-        btnTestSms = (Button) findViewById(R.id.btnTestSms);
-        btnLoginServer = (Button) findViewById(R.id.btnLoginServer);
+        /*btnTestSms = (Button) findViewById(R.id.btnTestSms);
+        btnLoginServer = (Button) findViewById(R.id.btnLoginServer);*/
         txtResult = (TextView) findViewById(R.id.txtResult);
 
-        edtUsername = (EditText) findViewById(R.id.edtUsername);
-        edtPassword = (EditText) findViewById(R.id.edtPassword);
+        inputUsername = (EditText) findViewById(R.id.inputUsername);
+        inputPassword = (EditText) findViewById(R.id.inputPassword);
         btnSendSms.setOnClickListener(btnSendSmsOnClick);
-        btnTestSms.setOnClickListener(btnTestSmsOnClick);
-        btnLoginServer.setOnClickListener(btnLoginServerOnClick);
+        /*btnTestSms.setOnClickListener(btnTestSmsOnClick);
+        btnLoginServer.setOnClickListener(btnLoginServerOnClick);*/
     }
 
-    private Button.OnClickListener btnTestSmsOnClick = new Button.OnClickListener(){
+    /*private Button.OnClickListener btnTestSmsOnClick = new Button.OnClickListener(){
         public void onClick(View v){
             Intent it = new Intent("android.provider.Telephony.SMS_RECEIVED");
             it.putExtra("sender_name", "hellosms");
             sendBroadcast(it);
         }
-    };
+    };*/
 
     private Button.OnClickListener btnSendSmsOnClick = new Button.OnClickListener(){
         public void onClick(View v){
-            String strPhoneNumber = edtPhoneNumber.getText().toString();
+            String strPhoneNumber = inputPhoneNumber.getText().toString();
+            String strUsername = inputUsername.getText().toString();
+            String strPassword = inputPassword.getText().toString();
             if(strPhoneNumber.length()==11){
-                /*txtResult.setText(strPhoneNumber);*/
-                try {
-                    SmsManager smsManager = SmsManager.getDefault();
-                    smsManager.sendTextMessage(strPhoneNumber, null, "GetValue", null, null);
-                    Toast.makeText(getApplicationContext(), "SMS sent.", Toast.LENGTH_LONG).show();
-                    txtResult.setText("sent successfully");
-                }
+                if((!strUsername.equals(""))&&(!strPassword.equals(""))){
+                    /*txtResult.setText(strPhoneNumber);*/
+                    try {
+                        /*String json = "";
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.accumulate("role", "1");
+                        jsonObject.accumulate("username", strUsername);
+                        jsonObject.accumulate("password", strPassword);
+                        json = jsonObject.toString();*/
+                        String json = "\"role\":\"1\",\"username\":\"" + strUsername + "\",\"password\":\"" + strPassword + "\"";
+                        SmsManager smsManager = SmsManager.getDefault();
+                        smsManager.sendTextMessage(strPhoneNumber, null, json, null, null);
+                        Toast.makeText(getApplicationContext(), "SMS sent.", Toast.LENGTH_LONG).show();
+                        txtResult.setText("sent successfully");
+                    }
 
-                catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), "SMS faild, please try again.", Toast.LENGTH_LONG).show();
-                    e.printStackTrace();
+                    catch (Exception e) {
+                        Toast.makeText(getApplicationContext(), "SMS faild, please try again.", Toast.LENGTH_LONG).show();
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    txtResult.setText("Please input Username and Password");
                 }
             } else{
                 txtResult.setText("wrong number");
@@ -93,7 +109,7 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
-    private Button.OnClickListener btnLoginServerOnClick = new Button.OnClickListener(){
+    /*private Button.OnClickListener btnLoginServerOnClick = new Button.OnClickListener(){
         public void onClick(View v){
             String strUsername = edtUsername.getText().toString();
             String strPassword = edtPassword.getText().toString();
@@ -103,7 +119,7 @@ public class MainActivity extends ActionBarActivity {
                 startActivity(intent);
             }
         }
-    };
+    };*/
 
 
 }

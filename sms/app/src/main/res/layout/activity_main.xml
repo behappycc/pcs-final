@@ -13,11 +13,11 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"/>
 
-    <Button android:id="@+id/btnTestSms"
+    <!--<Button android:id="@+id/btnTestSms"
         android:text="hi"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/pcsFinal"/>
+        android:layout_below="@+id/pcsFinal"/>-->
 
     <ImageView
         android:id="@+id/imageUser"
@@ -25,15 +25,39 @@
         android:layout_height="100dip"
         android:layout_gravity="center"
         android:src="@drawable/user"
-        android:layout_below="@+id/btnTestSms"/>
+        android:layout_below="@+id/pcsFinal"/>
+
+    <TextView
+        android:id="@+id/txtUsername"
+        android:text="@string/username"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageUser"/>
+
+    <EditText android:id="@+id/inputUsername"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtUsername"/>
+
+    <TextView
+        android:id="@+id/txtPassword"
+        android:text="@string/password"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/inputUsername"/>
+
+    <EditText android:id="@+id/inputPassword"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtPassword"/>
 
     <TextView android:id="@+id/txtPhoneNumber"
         android:text="@string/phone_number"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageUser"/>
+        android:layout_below="@+id/inputPassword"/>
 
-    <EditText android:id="@+id/edtPhoneNumber"
+    <EditText android:id="@+id/inputPhoneNumber"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtPhoneNumber"/>
@@ -42,7 +66,7 @@
         android:text="@string/send_sms"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/edtPhoneNumber"/>
+        android:layout_below="@+id/inputPhoneNumber"/>
 
     <TextView android:id="@+id/txtResult"
         android:text="@string/result"
@@ -50,20 +74,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/btnSendSms"/>
 
-    <EditText android:id="@+id/edtUsername"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txtResult"/>
-
-    <EditText android:id="@+id/edtPassword"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/edtUsername"/>
-
-    <Button android:id="@+id/btnLoginServer"
+    <!--<Button android:id="@+id/btnLoginServer"
         android:text="@string/server"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/edtPassword"/>
+        android:layout_below="@+id/edtPassword"/>-->
 
 </RelativeLayout>
