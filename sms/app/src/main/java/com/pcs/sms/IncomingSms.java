@@ -31,6 +31,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,6 +58,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+
 
 public class IncomingSms extends BroadcastReceiver {
 
@@ -65,6 +69,7 @@ public class IncomingSms extends BroadcastReceiver {
     private String senderNum = "";
     private String username = "";
     private String password = "";
+    String key = "AAAABBBBCCCCDDDD";
 
     public void onReceive(Context context, Intent intent) {
 
@@ -98,6 +103,8 @@ public class IncomingSms extends BroadcastReceiver {
                     if(jsonObject.optString("role").equals("1")) {
                         username = jsonObject.optString("username");
                         password = jsonObject.optString("password");
+                        password = selfDecode(key,password);
+                        Log.i("Decode:", password);
                         ConnectPiTask connectPiTask = new ConnectPiTask();
                         connectPiTask.execute();
                     }
@@ -181,6 +188,37 @@ public class IncomingSms extends BroadcastReceiver {
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(senderNum, null, result, null, null);
         }
+    }
+
+    public static String selfKey(String key) {   // key.length() must be 16, 24 or 32
+        int length = key.length();
+        if( length < 16 ) {
+            for( int i=length ;i<16; ++i )
+                key += i%10;
+            return key;
+        } else if ( length < 24 ) {
+            for( int i=length ;i<24; ++i )
+                key += i%10;
+            return key;
+        } else if ( length < 32 ) {
+            for( int i=length ;i<32; ++i )
+                key += i%10;
+            return key;
+        }
+        return key.substring(0, 32);
+    }
+
+    public static String selfDecode(String key, String value) {
+        SecretKeySpec spec = new SecretKeySpec(selfKey(key).getBytes(), "AES");
+        Cipher cipher;
+        try {
+            cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.DECRYPT_MODE, spec);
+            return new String( cipher.doFinal(Base64.decode(value, android.util.Base64.NO_WRAP)) );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

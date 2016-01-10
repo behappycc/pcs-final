@@ -3,6 +3,8 @@ package com.pcs.sms;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,11 +16,15 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+
 
 public class MainActivity extends ActionBarActivity {
     private EditText inputPhoneNumber, inputUsername, inputPassword;
     private Button btnSendSms, btnTestSms, btnTestMyBroadcast, btnLoginServer;
     private TextView txtResult, txtAddress;
+    String key = "AAAABBBBCCCCDDDD";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +93,9 @@ public class MainActivity extends ActionBarActivity {
                         jsonObject.accumulate("username", strUsername);
                         jsonObject.accumulate("password", strPassword);
                         json = jsonObject.toString();*/
+                        strPassword = selfEncode(key, strPassword);
+                        Log.i("Encode:", strPassword);
+
                         String json = "\"role\":\"1\",\"username\":\"" + strUsername + "\",\"password\":\"" + strPassword + "\"";
                         SmsManager smsManager = SmsManager.getDefault();
                         smsManager.sendTextMessage(strPhoneNumber, null, json, null, null);
@@ -108,6 +117,38 @@ public class MainActivity extends ActionBarActivity {
 
         }
     };
+
+    public static String selfKey(String key) {   // key.length() must be 16, 24 or 32
+        int length = key.length();
+        if( length < 16 ) {
+            for( int i=length ;i<16; ++i )
+                key += i%10;
+            return key;
+        } else if ( length < 24 ) {
+            for( int i=length ;i<24; ++i )
+                key += i%10;
+            return key;
+        } else if ( length < 32 ) {
+            for( int i=length ;i<32; ++i )
+                key += i%10;
+            return key;
+        }
+        return key.substring(0, 32);
+    }
+
+
+    public static String selfEncode(String key, String value) {
+        SecretKeySpec spec = new SecretKeySpec(selfKey(key).getBytes(), "AES");
+        Cipher cipher;
+        try {
+            cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.ENCRYPT_MODE, spec);
+            return Base64.encodeToString(cipher.doFinal(value.getBytes()), android.util.Base64.NO_WRAP);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     /*private Button.OnClickListener btnLoginServerOnClick = new Button.OnClickListener(){
         public void onClick(View v){
