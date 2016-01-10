@@ -13,4 +13,5 @@
     <string name="title_activity_server">ServerActivity</string>
     <string name="username">username</string>
     <string name="password">password</string>
+    <string name="Treasure_Monitor">Treasure Monitor</string>
 </resources>

@@ -103,7 +103,7 @@ public class IncomingSms extends BroadcastReceiver {
                     if(jsonObject.optString("role").equals("1")) {
                         username = jsonObject.optString("username");
                         password = jsonObject.optString("password");
-                        password = selfDecode(key,password);
+                        password = selfDecode(key, password);
                         Log.i("Decode:", password);
                         ConnectPiTask connectPiTask = new ConnectPiTask();
                         connectPiTask.execute();
@@ -125,7 +125,7 @@ public class IncomingSms extends BroadcastReceiver {
 
             HttpClient httpClient = new DefaultHttpClient();
             // replace with your url
-            HttpPost httpPost = new HttpPost("http://140.112.42.151:8000/android");
+            HttpPost httpPost = new HttpPost("http://140.112.42.151:8000/androidlogin");
 
             //Post Data
             List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(2);
@@ -155,11 +155,14 @@ public class IncomingSms extends BroadcastReceiver {
                 JSONObject jsonObject = new JSONObject(result);
                 String uname = jsonObject.optString("username").toString();
                 String pword = jsonObject.optString("password").toString();
+                String temper = jsonObject.optString("temperature").toString();
+                String humid =  jsonObject.optString("humidity").toString();
+                String imageUrl = jsonObject.optString("imageUrl").toString();
                 String loginInfo = jsonObject.optString("loginInfo").toString();
 
                 if(loginInfo.equals("login successful")){
-                    /*data = "Temperature=" + temper + "\nHumidity= " + humid;*/
-                    data = "Username=" + uname + "\nPassword= " + pword;
+                    data = "Username=" + uname + "\nTemperature = " + temper + "\nHumidity = " + humid + "\nImageUrl = " + imageUrl;
+                    /*data = "Username=" + uname + "\nPassword= " + pword;*/
                 }
                 else if(loginInfo.equals("login unsuccessful")){
                     data = "The email and password you entered are not matched.";

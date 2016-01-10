@@ -9,7 +9,7 @@
         android:id="@+id/pcsFinal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/pcs_final"
+        android:text="@string/Treasure_Monitor"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"/>
 
