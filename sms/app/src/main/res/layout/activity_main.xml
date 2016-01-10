@@ -49,6 +49,7 @@
     <EditText android:id="@+id/inputPassword"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:inputType="textPassword"
         android:layout_below="@+id/txtPassword"/>
 
     <TextView android:id="@+id/txtPhoneNumber"

@@ -83,7 +83,7 @@ public class MainActivity extends ActionBarActivity {
             String strPhoneNumber = inputPhoneNumber.getText().toString();
             String strUsername = inputUsername.getText().toString();
             String strPassword = inputPassword.getText().toString();
-            if(strPhoneNumber.length()==11){
+            if(strPhoneNumber.length()==10){
                 if((!strUsername.equals(""))&&(!strPassword.equals(""))){
                     /*txtResult.setText(strPhoneNumber);*/
                     try {
