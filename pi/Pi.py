@@ -6,10 +6,13 @@ import time
 import cv2
 
 def camera():
+    #x = 0
     camera = picamera.PiCamera()
     camera.capture('./static/PiImages/imageA.jpg')
     camera.close()
-    time.sleep(1)
+
+    time.sleep(30)
+    #while(x<1000):
     camera = picamera.PiCamera()
     camera.capture('./static/PiImages/imageB.jpg')
     camera.close()
@@ -18,12 +21,12 @@ def camera():
     imagelocationB = "./static/PiImages/imageB.jpg"
 
     pixelCompare(imagelocationA,imagelocationB,0.1)
+    #x = x+1
     #camera.start_preview()
     #camera.stop_preview()
-
-
+    #time.sleep(30)
     
-    def pixelCompare(i1, i2, ratio):
+def pixelCompare(i1, i2, ratio):
     img1 = cv2.imread(i1)
     img2 = cv2.imread(i2)
     imgray1 = cv2.cvtColor(img1,cv2.COLOR_BGR2GRAY)
@@ -33,20 +36,20 @@ def camera():
     diff = 0
     for i in xrange(imgInfo[0]):
         for j in xrange(imgInfo[1]):
-            #if imgray1[i, j] != imgray2[i, j]:
-            if abs(imgray1[i, j] - imgray2[i, j]) > 5:
+            if abs(int(imgray1[i, j]) - int(imgray2[i, j])) > 5:
                 diff += 1
     compare = float(diff) / float((imgInfo[0] * imgInfo[1]))
     #print str(compare * 100) + '%'
     if compare > ratio:
         #there are differnt
-        #there are different
+	print 'there are different'
+	#cv2.imwrite("./static/PiImages/different/Aimage" + str(x) + ".jpg" , img1)
+	#cv2.imwrite("./static/PiImages/different/Bimage" + str(x) + ".jpg" , img2)
         return True
     else:
-        #there are same
+	print 'there are same'
         return False
-    '''
-
+    
 def sensor():
     sensor = Adafruit_DHT.DHT11
     pin = 4
@@ -74,7 +77,6 @@ def lightOff():
     LEDoff = GPIO.output(4, 1)
 
 def main():
-    lightOn()
     camera()
 
 if __name__ == '__main__':
